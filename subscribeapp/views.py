@@ -46,3 +46,6 @@ class SubscribeViewset(viewsets.GenericViewSet, mixins.CreateModelMixin):
                 {"payment_link": payment_link}, 
                 status=status.HTTP_201_CREATED
             )
+
+
+
