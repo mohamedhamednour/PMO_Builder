@@ -173,10 +173,10 @@ ROOT_URLCONF = 'project.tenant_urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': 'postgres',
-        'USER': 'postgres.nseqfhmtcvjlfhaycgju',
-        'PASSWORD': 'QuantumpHarmacy5',
-        'HOST': 'aws-1-us-east-2.pooler.supabase.com',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('POSTGRES_HOST'),
         'PORT': '5432',
     }
 }
