@@ -5,7 +5,6 @@ from django.db import models
 from .conf import PLAN_CHOICES
 class Plan(models.Model):
 
-
     name = models.CharField(max_length=50, choices=PLAN_CHOICES, unique=True)
     price_per_month = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     credits_per_month = models.PositiveIntegerField()

@@ -8,3 +8,13 @@ class InitProjectData:
 
     def dict(self):
         return asdict(self)
+
+
+@dataclass
+class GenrateDomainData:
+    projectName: str
+    stageName: list
+    projectId: str
+
+    def dict(self):
+        return asdict(self)

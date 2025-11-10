@@ -38,26 +38,43 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'userapp.User'
 # Application definition
 
-APPS = [
-    'userapp',
-    'shared',
-    'planapp',
-    'subscribeapp',
-    'uploadprojectapp',
-]
-INSTALLED_APPS = [
-    'django.contrib.admin',
+
+
+
+SHARED_APPS = [
     'django.contrib.auth',
+    'django.contrib.admin',
+    'django_tenants',
+    'tenant', 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'drf_spectacular',
-    'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework',
     'django_filters',
+    # 'debug_toolbar',
+    'userapp', 
+    'shared',
+    'drf_spectacular',
+]
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
-] + APPS
+
+TENANT_APPS = [
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'userapp',
+    'planapp',
+    'subscribeapp',
+    'uploadprojectapp',
+    'drf_spectacular'
+]
+
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "PMO  API",
     "DESCRIPTION": "PMO  Swagger Documentation",
@@ -90,6 +107,7 @@ SPECTACULAR_SETTINGS = {
 
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -100,6 +118,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project.urls'
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
+
+TENANT_MODEL = "tenant.Client"
+TENANT_DOMAIN_MODEL = "tenant.Domain"
 
 TEMPLATES = [
     {
@@ -141,11 +165,14 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
+PUBLIC_SCHEMA_URLCONF = 'project.urls'  # Public schema routes
+ROOT_URLCONF = 'project.tenant_urls' 
 
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'postgres',
         'USER': 'postgres.nseqfhmtcvjlfhaycgju',
         'PASSWORD': 'QuantumpHarmacy5',
